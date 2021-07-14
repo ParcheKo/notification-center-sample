@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitoringService", "MonitoringService\MonitoringService.csproj", "{BF307A34-821E-4CBA-B10E-CD734636C990}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonitoringService", "MonitoringService\MonitoringService.csproj", "{BF307A34-821E-4CBA-B10E-CD734636C990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{144BA51C-2487-4BD9-852B-785B7D456A8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +17,15 @@ Global
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Release|Any CPU.Build.0 = Release|Any CPU
-		{144BA51C-2487-4BD9-852B-785B7D456A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{144BA51C-2487-4BD9-852B-785B7D456A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{144BA51C-2487-4BD9-852B-785B7D456A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{144BA51C-2487-4BD9-852B-785B7D456A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80C2425A-EB2C-46EC-AE10-CC11774DDF06}
 	EndGlobalSection
 EndGlobal
