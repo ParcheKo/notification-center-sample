@@ -14,7 +14,7 @@ namespace MonitoringService
     public class MonitoringService : IHostedService
     {
         private readonly ILogger<MonitoringService> _logger;
-        private MonitoringSettings _monitoringSettings;
+        private Settings _settings;
         private readonly IList<FileSystemWatcher> _fileWatchers;
 
         public MonitoringService(ILogger<MonitoringService> logger, IServiceProvider provider)
@@ -30,13 +30,13 @@ namespace MonitoringService
             using (var scope = provider.CreateScope())
             {
                 var scopedProvider = scope.ServiceProvider;
-                _monitoringSettings = scopedProvider.GetRequiredService<IOptionsSnapshot<MonitoringSettings>>().Value;
+                _settings = scopedProvider.GetRequiredService<IOptionsSnapshot<Settings>>().Value;
             }
         }
 
         private void InitializeFileWatchers()
         {
-            foreach (var app in _monitoringSettings.Apps)
+            foreach (var app in _settings.MonitoredApps)
             {
                 var fileWatcher = new FileSystemWatcher(app.RootPath)
                 {

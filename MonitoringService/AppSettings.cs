@@ -6,12 +6,13 @@ namespace MonitoringService
 {
     public class AppSettings
     {
-        public MonitoringSettings MonitoringSettings { get; set; }
+        public Settings Settings { get; set; }
     }
 
-    public class MonitoringSettings
+    public class Settings
     {
-        public IEnumerable<App> Apps { get; set; }
+        public IEnumerable<App> MonitoredApps { get; set; }
+        public string NotificationCenterAppUrl { get; set; }
     }
 
     public class App
