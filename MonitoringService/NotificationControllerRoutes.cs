@@ -2,6 +2,6 @@
 {
     public static class NotificationControllerRoutes
     {
-        public const string NotificationsHistory = "history";
+        public const string NotificationsHistory = "notifications";
     }
 }

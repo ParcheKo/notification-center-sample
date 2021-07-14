@@ -95,7 +95,7 @@ namespace MonitoringService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<NotificationHub>(NotificationHubRoutes.Notifications);
+                endpoints.MapHub<NotificationCenterHub>(NotificationHubRoutes.Notifications);
             });
         }
     }
