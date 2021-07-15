@@ -1,6 +1,9 @@
-<h1>What's up?!</h1>
+<h1>Notifications</h1>
+<hr>
+<!--<input type="text" [(ngModel)]="messageForServer">-->
+<!--<button (click)="notifyOthers(messageForServer)">Notify others that I'm here!</button>-->
 <ul>
-  <li *ngFor="let item of items;">
-    {{item}}
+  <li *ngFor="let notification of notifications;">
+    {{notification?.toString()}}
   </li>
 </ul>
