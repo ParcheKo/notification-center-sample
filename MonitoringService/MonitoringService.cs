@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,15 +17,18 @@ namespace MonitoringService
     public class MonitoringService : IHostedService
     {
         private readonly ILogger<MonitoringService> _logger;
+        private readonly IMediator _mediator;
         private Settings _settings;
         private readonly IList<FileSystemWatcher> _fileWatchers;
+        private readonly Dictionary<FileSystemWatcher, App> _fileSystemWatcherAppMap;
 
-        public MonitoringService(ILogger<MonitoringService> logger, IServiceProvider provider)
+        public MonitoringService(ILogger<MonitoringService> logger, IServiceProvider provider, IMediator mediator)
         {
             _logger = logger;
-            InitializeMonitoringSettings(provider);
+            _mediator = mediator;
             _fileWatchers = new List<FileSystemWatcher>();
-            InitializeFileWatchers();
+            InitializeMonitoringSettings(provider);
+            _fileSystemWatcherAppMap = new Dictionary<FileSystemWatcher, App>();
         }
 
         private void InitializeMonitoringSettings(IServiceProvider provider)
@@ -34,7 +40,7 @@ namespace MonitoringService
             }
         }
 
-        private void InitializeFileWatchers()
+        private void ConfigureFileWatchers(IList<FileSystemWatcher> fileWatchers)
         {
             foreach (var app in _settings.MonitoredApps)
             {
@@ -45,13 +51,14 @@ namespace MonitoringService
                     NotifyFilter = app.ChangesToMonitor,
                     Filter = app.FileNameFilter
                 };
+                _fileSystemWatcherAppMap.Add(fileWatcher, app);
                 fileWatcher.Changed += OnChanged;
                 fileWatcher.Created += OnCreated;
                 fileWatcher.Deleted += OnDeleted;
                 fileWatcher.Renamed += OnRenamed;
                 fileWatcher.Error += OnError;
 
-                _fileWatchers.Add(fileWatcher);
+                fileWatchers.Add(fileWatcher);
             }
         }
 
@@ -67,6 +74,10 @@ namespace MonitoringService
 
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
+            Thread.Sleep(1000);
+            _fileSystemWatcherAppMap.TryGetValue((sender as FileSystemWatcher)!, out var app);
+            var version = e.FullPath.FileProductVersion();
+            _mediator.Publish(new AppPublished("Amir", app!.Name, version));
             _logger.LogInformation("Created: {FullPath}", e.FullPath);
         }
 
@@ -97,7 +108,7 @@ namespace MonitoringService
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            ConfigureFileWatchers(_fileWatchers);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

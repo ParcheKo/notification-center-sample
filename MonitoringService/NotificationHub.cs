@@ -5,8 +5,13 @@ using ExceptionContext = Microsoft.AspNetCore.Mvc.Filters.ExceptionContext;
 
 namespace MonitoringService
 {
-    public class NotificationCenterHub: Hub<INotificationClientApp>
+    public class NotificationHub: Hub<INotificationHubClient>
     {
+        public async Task NotifyOthers(string message)
+        {
+            await Clients.Others.ReceiveSimpleMessage(message);
+        }
+        
         public async Task NotifyAll(string message)
         {
             await Clients.All.ReceiveSimpleMessage(message);

@@ -9,18 +9,18 @@ namespace MonitoringService
     [ApiController]
     public class NotificationController : ControllerBase
     {
-        private readonly IHubContext<NotificationCenterHub, INotificationClientApp> _hubContext;
+        private readonly IHubContext<NotificationHub, INotificationHubClient> _notificationHubContext;
 
-        public NotificationController(Settings settings, IHubContext<NotificationCenterHub, INotificationClientApp> hubContext)
+        public NotificationController(Settings settings, IHubContext<NotificationHub, INotificationHubClient> hubContext)
         {
-            _hubContext = hubContext;
+            _notificationHubContext = hubContext;
         }
 
         [HttpGet]
         [Route(NotificationControllerRoutes.NotificationsHistory)]
         public async Task<string> GetNotificationHistory()
         {
-            await _hubContext.Clients.All.ReceiveSimpleMessage("someone reached the get-all route!");
+            await _notificationHubContext.Clients.All.ReceiveSimpleMessage("someone reached the get-all route!");
             //todo: get a paged list of notifications.
             return await Task.FromResult("I am the notifications!");
         }

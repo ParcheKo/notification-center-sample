@@ -2,9 +2,9 @@
 
 namespace MonitoringService
 {
-    public interface INotificationClientApp
+    public interface INotificationHubClient
     {
         Task ReceiveSimpleMessage(string message);
-        Task ReceiveFileCreatedEvent(string message);
+        Task ReceiveAppPublishedMessage(AppPublished message);
     }
 }

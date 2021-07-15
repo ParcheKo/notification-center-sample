@@ -2,6 +2,6 @@
 {
     public static class NotificationHubRoutes
     {
-        public const string Notifications = "/notifications-stream";
+        public const string Notifications = "stream/notifications";
     }
 }

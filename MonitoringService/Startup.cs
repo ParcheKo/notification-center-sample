@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,7 +38,8 @@ namespace MonitoringService
                     {
                         builder.WithOrigins(settings.NotificationCenterAppUrl)
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                     });
             });
 
@@ -65,6 +67,7 @@ namespace MonitoringService
             
             //todo: add and setup later.
             services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+            services.AddMediatR(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +98,7 @@ namespace MonitoringService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<NotificationCenterHub>(NotificationHubRoutes.Notifications);
+                endpoints.MapHub<NotificationHub>(NotificationHubRoutes.Notifications);
             });
         }
     }
