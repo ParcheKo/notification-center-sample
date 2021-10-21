@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MonitoringService.Configurations
@@ -24,6 +25,12 @@ namespace MonitoringService.Configurations
     public class HealthChecks
     {
         public List<Database> Databases { get; set; }
+        public string RedisConnectionString { get; set; }
+        public string RabbitMqConnectionString { get; set; }
+        public string SeqUri { get; set; }
+        public string ElasticSearchUri { get; set; }
+        public string ElasticSearchUsername { get; set; }
+        public string ElasticSearchPassword { get; set; }
     }
 
     public class App

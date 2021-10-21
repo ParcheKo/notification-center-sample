@@ -1,3 +1,4 @@
+using System;
 using HealthChecks.UI.Client;
 using MediatR;
 using Microsoft.AspNet.SignalR;
@@ -12,7 +13,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MonitoringService.Configurations;
 using MonitoringService.Stream;
-using static MonitoringService.Configurations.AppRoutes;
 using static MonitoringService.AssemblyVersionHelpers;
 using static MonitoringService.Configurations.Constants.Configuration;
 using IUserIdProvider = Microsoft.AspNetCore.SignalR.IUserIdProvider;
@@ -114,16 +114,30 @@ namespace MonitoringService
                         name: database.Name);
             }
 
-            services.AddHealthChecksUI(opt =>
+            healthChecks.AddRedis(settings.HealthChecks.RedisConnectionString,
+                HealthCheck.Redis);
+            healthChecks.AddRabbitMQ(new Uri(settings.HealthChecks.RabbitMqConnectionString),
+                name: "RabbitMQ");
+            healthChecks.AddUrlGroup(new Uri(settings.HealthChecks.SeqUri),
+                "Seq");
+            healthChecks.AddElasticsearch(s =>
                 {
-                    // opt.SetEvaluationTimeInSeconds(15); //time in seconds between check
-                    // opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks
-                    opt.SetApiMaxActiveRequests(1); //api requests concurrency
+                    s.UseServer(settings.HealthChecks.ElasticSearchUri);
+                    s.UseBasicAuthentication(settings.HealthChecks.ElasticSearchUsername,
+                        settings.HealthChecks.ElasticSearchPassword);
+                },
+                "Elastic");
 
-                    opt.AddHealthCheckEndpoint(HealthCheck.ApiName,
-                        HealthCheck.ApiUrl); //map health check api
-                })
-                .AddInMemoryStorage();
+            // services.AddHealthChecksUI(opt =>
+            //     {
+            //         // opt.SetEvaluationTimeInSeconds(15); //time in seconds between check
+            //         // opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks
+            //         opt.SetApiMaxActiveRequests(1); //api requests concurrency
+            //
+            //         opt.AddHealthCheckEndpoint(HealthCheck.ApiName,
+            //             HealthCheck.ApiUrl); //map health check api
+            //     })
+            //     .AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -168,7 +182,10 @@ namespace MonitoringService
                     .RequireCors(Cors.HealthChecksCorsPolicy)
                     // .RequireAuthorization();
                     ;
-                endpoints.MapHealthChecksUI(o => { o.UIPath = HealthCheck.UIPath; });
+                // endpoints.MapHealthChecksUI(o =>
+                // {
+                //     o.UIPath = HealthCheck.UIPath;
+                // });
             });
         }
     }

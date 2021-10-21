@@ -21,6 +21,7 @@
                 public const string ApiName = "Notifications Service HealCheck API ";
                 public const string ApiUrl = "/hc";
                 public const string UIPath = "/hc-ui";
+                public const string Redis = nameof(Redis);
             }
         }
     }
