@@ -54,14 +54,19 @@ export class SignalrService {
 
   // This method will implement the methods defined in the ISignalrDemoHub interface in the SignalrDemo.Server .NET solution
   private setSignalrClientMethods(): void {
-    this.connection.on('ReceiveSimpleMessage', (message: string) => {
+    this.connection.on(NotificationHubClientCallbacks.ReceiveSimpleMessage, (message: string) => {
       this.receiveSimpleMessage.next(message);
     });
 
-    this.connection.on('ReceiveAppPublishedMessage', (message: AppPublished) => {
+    this.connection.on(NotificationHubClientCallbacks.ReceiveAppPublishedMessage, (message: AppPublished) => {
       const typedMessage = AppPublished.from(message.id, message.when, message.who, message.appName, message.version);
       // const typedMessage = new AppPublished(message);
       this.receiveAppPublishedMessage.next(typedMessage);
     });
   }
+}
+
+export class NotificationHubClientCallbacks{
+  static ReceiveSimpleMessage = 'ReceiveSimpleMessage';
+  static ReceiveAppPublishedMessage = 'ReceiveAppPublishedMessage';
 }

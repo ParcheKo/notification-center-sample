@@ -4,6 +4,8 @@ import * as signalR from '@microsoft/signalr';
 import {SignalrService} from '../core/signalr.service';
 import {BehaviorSubject} from 'rxjs';
 import {AppPublished} from '../contracts/events';
+import {not} from 'rxjs/internal-compatibility';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-notifications',
@@ -15,17 +17,17 @@ export class NotificationsComponent implements OnInit {
   notifications: AppPublished[] = [];
   messageForServer: string = '';
 
-  constructor(private signalrService: SignalrService) {
+  constructor(private signalrService: SignalrService, private toastr: ToastrService) {
     this.connection = this.signalrService.connection;
   }
 
   ngOnInit(): void {
-    this.signalrService.connection
-      .invoke('Hello')
-      .catch(error => {
-        console.log(`SignalrDemoHub.Hello() error: ${error}`);
-        alert('SignalrDemoHub.Hello() error!, see console for details.');
-      });
+    // this.signalrService.connection
+    //   .invoke('Hello')
+    //   .catch(error => {
+    //     console.log(`SignalrDemoHub.Hello() error: ${error}`);
+    //     alert('SignalrDemoHub.Hello() error!, see console for details.');
+    //   });
 
     this.signalrService.receiveSimpleMessage.subscribe((simpleMessage: string) => {
       // this.simpleMessage = simpleMessage;
@@ -36,8 +38,25 @@ export class NotificationsComponent implements OnInit {
       // this.simpleMessage = simpleMessage;
       if (appPublishedMessage) {
         this.notifications.push(appPublishedMessage);
+        console.log(this.propertyNamesOf(appPublishedMessage));
+        let notification = new Notification("App Published", {body: appPublishedMessage.toString()});
       }
     });
+
+    if (Notification.permission === "granted") {
+      // If it's okay let's create a notification
+      let notification = new Notification('Title', {body: 'Body'});
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(function (permission) {
+        // If the user accepts, let's create a notification
+        if (permission === "granted") {
+          let notification = new Notification("Hi there!");
+        }
+      });
+    }
 
     // this.connection = new signalR.HubConnectionBuilder()
     //   .configureLogging(signalR.LogLevel.Information)
@@ -99,6 +118,12 @@ export class NotificationsComponent implements OnInit {
     // });
   }
 
+  private propertyNamesOf(appPublishedMessage: AppPublished) {
+    return Object.keys(appPublishedMessage).
+      filter(e => typeof Object.getOwnPropertyDescriptors(appPublishedMessage)[e].value !== 'function');
+  }
+
+
   // async start(connection: signalR.HubConnection) {
   //   try {
   //     await this.connection.start();
@@ -110,10 +135,22 @@ export class NotificationsComponent implements OnInit {
   //     setTimeout(() => this.start(this.connection), 5000);
   //   }
   // }
+  getNotificationIdentity(index: number, notification: AppPublished) : string{
+    return notification.id
+  }
 
   notifyOthers(message: string) {
     this.connection.invoke('NotifyOthers', message).then(r => {
     });
+  }
+
+  onClick() {
+    alert('file uploaded!');
+  }
+
+  notify() {
+    this.toastr.info('Hello world!', 'Toastr fun!');
+    // new DesktopNotifications()
   }
 }
 

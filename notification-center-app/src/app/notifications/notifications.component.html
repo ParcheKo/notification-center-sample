@@ -1,9 +1,6 @@
-<h1>Notifications</h1>
-<hr>
-<!--<input type="text" [(ngModel)]="messageForServer">-->
-<!--<button (click)="notifyOthers(messageForServer)">Notify others that I'm here!</button>-->
+<h1 (click)="notify()">Notifications</h1>
 <ul>
-  <li *ngFor="let notification of notifications;">
+  <li *ngFor="let notification of notifications; trackBy: getNotificationIdentity">
     {{notification?.toString()}}
   </li>
 </ul>
