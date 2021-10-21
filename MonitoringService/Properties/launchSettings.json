@@ -3,7 +3,7 @@
     "WorkerService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/notifications",
+      "launchUrl": "",
       "applicationUrl": "https://localhost:5051;http://localhost:5050",
       "dotnetRunMessages": "true",
       "environmentVariables": {

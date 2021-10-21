@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNet.SignalR.Hubs;
 
-namespace MonitoringService
+namespace MonitoringService.Stream
 {
     public class ErrorHandlingPipelineModule : HubPipelineModule
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using ExceptionContext = Microsoft.AspNetCore.Mvc.Filters.ExceptionContext;
 
-namespace MonitoringService
+namespace MonitoringService.Stream
 {
     public class NotificationHub: Hub<INotificationHubClient>
     {

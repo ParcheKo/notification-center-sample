@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using MonitoringService.Stream;
 
-namespace MonitoringService
+namespace MonitoringService.Events
 {
     public class AppPublishedHandler : INotificationHandler<AppPublished>
     {

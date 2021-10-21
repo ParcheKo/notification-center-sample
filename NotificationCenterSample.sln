@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MonitoringService", "MonitoringService\MonitoringService.csproj", "{BF307A34-821E-4CBA-B10E-CD734636C990}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF307A34-821E-4CBA-B10E-CD734636C990}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B6B0E45-AFB7-4D2A-9B15-CE91828A2114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

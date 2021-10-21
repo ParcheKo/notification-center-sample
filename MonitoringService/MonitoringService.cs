@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MonitoringService.Events;
 
 namespace MonitoringService
 {
@@ -33,14 +34,12 @@ namespace MonitoringService
 
         private void InitializeMonitoringSettings(IServiceProvider provider)
         {
-            using (var scope = provider.CreateScope())
-            {
-                var scopedProvider = scope.ServiceProvider;
-                _settings = scopedProvider.GetRequiredService<IOptionsSnapshot<Settings>>().Value;
-            }
+            using var scope = provider.CreateScope();
+            var scopedProvider = scope.ServiceProvider;
+            _settings = scopedProvider.GetRequiredService<IOptionsSnapshot<Settings>>().Value;
         }
 
-        private void ConfigureFileWatchers(IList<FileSystemWatcher> fileWatchers)
+        private async Task ConfigureFileWatchers(IList<FileSystemWatcher> fileWatchers)
         {
             foreach (var app in _settings.MonitoredApps)
             {
@@ -76,7 +75,7 @@ namespace MonitoringService
         {
             Thread.Sleep(1000);
             _fileSystemWatcherAppMap.TryGetValue((sender as FileSystemWatcher)!, out var app);
-            var version = e.FullPath.FileProductVersion();
+            var version = e.FullPath.GetAssemblyVersion();
             _mediator.Publish(new AppPublished("Amir", app!.Name, version));
             _logger.LogInformation("Created: {FullPath}", e.FullPath);
         }
@@ -108,7 +107,7 @@ namespace MonitoringService
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            ConfigureFileWatchers(_fileWatchers);
+            await ConfigureFileWatchers(_fileWatchers);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)

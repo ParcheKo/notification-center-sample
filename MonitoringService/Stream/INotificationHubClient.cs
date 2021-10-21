@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using MonitoringService.Events;
 
-namespace MonitoringService
+namespace MonitoringService.Stream
 {
     public interface INotificationHubClient
     {

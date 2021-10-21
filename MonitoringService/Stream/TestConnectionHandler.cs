@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Logging;
 
-namespace MonitoringService
+namespace MonitoringService.Stream
 {
     public class TestConnectionHandler : ConnectionHandler
     {

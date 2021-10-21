@@ -13,6 +13,18 @@ namespace MonitoringService
     {
         public IEnumerable<App> MonitoredApps { get; set; }
         public string NotificationCenterAppUrl { get; set; }
+        public HealthChecks HealthChecks { get; set; }
+    }
+
+    public class Database
+    {
+        public string Name { get; set; }
+        public string ConnectionString { get; set; }
+    }
+    
+    public class HealthChecks
+    {
+        public List<Database> Databases { get; set; }
     }
 
     public class App
