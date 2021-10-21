@@ -1,4 +1,4 @@
-﻿namespace MonitoringService
+﻿namespace MonitoringService.Configurations
 {
     public static class Constants
     {

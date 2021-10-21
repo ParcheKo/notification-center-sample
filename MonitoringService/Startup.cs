@@ -10,10 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using MonitoringService.Configurations;
 using MonitoringService.Stream;
-using static MonitoringService.AppRoutes;
+using static MonitoringService.Configurations.AppRoutes;
 using static MonitoringService.AssemblyVersionHelpers;
-using static MonitoringService.Constants.Configuration;
+using static MonitoringService.Configurations.Constants.Configuration;
 using IUserIdProvider = Microsoft.AspNetCore.SignalR.IUserIdProvider;
 
 

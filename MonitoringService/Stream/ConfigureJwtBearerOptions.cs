@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using MonitoringService.Configurations;
 
 namespace MonitoringService.Stream
 {

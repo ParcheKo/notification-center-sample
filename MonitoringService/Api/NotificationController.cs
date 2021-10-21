@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using MonitoringService.Configurations;
 using MonitoringService.Stream;
-using static MonitoringService.AppRoutes.Api.Notifications;
+using static MonitoringService.Configurations.AppRoutes.Api.Notifications;
 
 namespace MonitoringService.Api
 {
