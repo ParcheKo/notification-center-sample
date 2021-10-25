@@ -31,6 +31,7 @@ namespace MonitoringService.Configurations
         public string ElasticSearchUri { get; set; }
         public string ElasticSearchUsername { get; set; }
         public string ElasticSearchPassword { get; set; }
+        public string NotificationsStreamUrl { get; set; }
     }
 
     public class App

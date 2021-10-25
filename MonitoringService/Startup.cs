@@ -127,6 +127,7 @@ namespace MonitoringService
                         settings.HealthChecks.ElasticSearchPassword);
                 },
                 "Elastic");
+            healthChecks.AddSignalRHub(settings.HealthChecks.NotificationsStreamUrl);
 
             // services.AddHealthChecksUI(opt =>
             //     {
