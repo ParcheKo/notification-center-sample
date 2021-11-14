@@ -103,7 +103,7 @@ namespace MonitoringService
                     });
             });
             services.Configure<Settings>(Configuration.GetSection(nameof(Settings)));
-            services.AddScoped(cfg => cfg.GetService<IOptionsSnapshot<Settings>>()?.Value);
+            services.AddScoped(cfg => cfg.GetService<IOptionsSnapshot<Settings>>()?.Value!);
             services.AddSignalR(config =>
             {
                 if (Environment.IsDevelopment())
