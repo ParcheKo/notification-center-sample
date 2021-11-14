@@ -35,25 +35,25 @@ export class NotificationsComponent implements OnInit {
     });
 
     this.signalrService.receiveAppPublishedMessage.subscribe((appPublishedMessage: AppPublished) => {
-      // this.simpleMessage = simpleMessage;
-      if (appPublishedMessage) {
-        this.notifications.push(appPublishedMessage);
-        console.log(this.propertyNamesOf(appPublishedMessage));
-        let notification = new Notification("App Published", {body: appPublishedMessage.toString()});
+      if (!appPublishedMessage) {
+        return;
       }
+      this.notifications.push(appPublishedMessage);
+      console.log(this.propertyNamesOf(appPublishedMessage));
+      let notification = new Notification('App Published', {body: appPublishedMessage.toString()});
     });
 
-    if (Notification.permission === "granted") {
-      // If it's okay let's create a notification
-      let notification = new Notification('Title', {body: 'Body'});
+    // User has already granted the app to show desktop notifications
+    if (Notification.permission === 'granted') {
+      // If it's okay let's create a notification which means displaying it as well
+      let notification = new Notification('You already granted me to show notifications like this!');
     }
-
     // Otherwise, we need to ask the user for permission
-    else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(function (permission) {
-        // If the user accepts, let's create a notification
-        if (permission === "granted") {
-          let notification = new Notification("Hi there!");
+    else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(function(permission) {
+        // If the user accepts, let's create a notification which means displaying it as well
+        if (permission === 'granted') {
+          let notification = new Notification('Thank you for giving me the permission to show notifications!');
         }
       });
     }
@@ -119,8 +119,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   private propertyNamesOf(appPublishedMessage: AppPublished) {
-    return Object.keys(appPublishedMessage).
-      filter(e => typeof Object.getOwnPropertyDescriptors(appPublishedMessage)[e].value !== 'function');
+    return Object.keys(appPublishedMessage).filter(e => typeof Object.getOwnPropertyDescriptors(appPublishedMessage)[e].value !== 'function');
   }
 
 
@@ -135,8 +134,8 @@ export class NotificationsComponent implements OnInit {
   //     setTimeout(() => this.start(this.connection), 5000);
   //   }
   // }
-  getNotificationIdentity(index: number, notification: AppPublished) : string{
-    return notification.id
+  getNotificationIdentity(index: number, notification: AppPublished): string {
+    return notification.Identity;
   }
 
   notifyOthers(message: string) {

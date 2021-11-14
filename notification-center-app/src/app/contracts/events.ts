@@ -2,6 +2,10 @@ export class MonitoringEventBase {
   id: string;
   when: Date;
   who: string;
+
+  get Identity(): string {
+    return this.id;
+  }
 }
 
 export class AppPublished extends MonitoringEventBase {

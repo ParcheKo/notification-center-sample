@@ -17,7 +17,7 @@ export class SignalrService {
     this.receiveAppPublishedMessage = new BehaviorSubject<AppPublished>(null);
   }
 
-  // Establish a connection to the SignalR server hub
+// Establish a connection to the SignalR server hub
   public initiateSignalrConnection(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.connection = new signalR.HubConnectionBuilder()
