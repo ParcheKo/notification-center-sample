@@ -1,14 +1,17 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using MonitoringService.Configurations;
 using MonitoringService.Stream;
 using static MonitoringService.Configurations.AppRoutes.Api.Notifications;
+using static MonitoringService.Configurations.Constants.Configuration.Cors;
 
 namespace MonitoringService.Api
 {
     [Route(Collection)]
     [ApiController]
+    [EnableCors(NotificationsApiPolicy)]
     public class NotificationController : ControllerBase
     {
         private readonly IHubContext<NotificationHub, INotificationHubClient> _notificationHubContext;

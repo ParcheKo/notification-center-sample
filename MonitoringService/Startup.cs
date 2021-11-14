@@ -52,16 +52,25 @@ namespace MonitoringService
             // Add CORS allowed domains  
             services.AddCors(options =>
             {
-                options.AddPolicy(Cors.NotificationsCorsPolicy,
+                options.AddPolicy(Cors.NotificationsApiPolicy,
                     builder =>
                     {
                         builder
-                            .WithOrigins(settings.NotificationCenterAppUrl)
+                            .WithOrigins(settings.NotificationsAppUrl)
                             .AllowCredentials()
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
-                options.AddPolicy(Cors.HealthChecksCorsPolicy,
+                options.AddPolicy(Cors.NotificationsStreamPolicy,
+                    builder =>
+                    {
+                        builder
+                            .WithOrigins(settings.NotificationsAppUrl)
+                            .AllowCredentials()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+                options.AddPolicy(Cors.HealthChecksPolicy,
                     builder =>
                     {
                         builder
@@ -164,23 +173,26 @@ namespace MonitoringService
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors( /*"NotificationsCorsPolicy"*/); // pass default cors policy
+            app.UseCors();
             // app.UseAuthorization();
 
             // Any connection or hub wire up and configuration should go here
+            // SEEMS NOT TO BE TRIGGERED in ASP.NET Core
             GlobalHost.HubPipeline.AddModule(new ErrorHandlingPipelineModule());
             GlobalHost.HubPipeline.AddModule(new LoggingPipelineModule());
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<NotificationHub>(AppRoutes.Stream.Notifications);
+                endpoints.MapHub<NotificationHub>(AppRoutes.Stream.Notifications)
+                    .RequireCors(Cors.NotificationsStreamPolicy);
                 endpoints.MapHealthChecks(HealthCheck.ApiUrl,
                         new HealthCheckOptions
                         {
                             Predicate = _ => true,
                             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                         })
-                    .RequireCors(Cors.HealthChecksCorsPolicy)
+                    .RequireCors(Cors.HealthChecksPolicy)
                     // .RequireAuthorization();
                     ;
                 // endpoints.MapHealthChecksUI(o =>

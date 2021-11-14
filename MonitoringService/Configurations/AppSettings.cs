@@ -12,7 +12,7 @@ namespace MonitoringService.Configurations
     public class Settings
     {
         public IEnumerable<App> MonitoredApps { get; set; }
-        public string NotificationCenterAppUrl { get; set; }
+        public string NotificationsAppUrl { get; set; }
         public HealthChecks HealthChecks { get; set; }
     }
 

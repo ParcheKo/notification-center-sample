@@ -6,8 +6,9 @@
         {
             public static class Cors
             {
-                public const string NotificationsCorsPolicy = nameof(NotificationsCorsPolicy);
-                public const string HealthChecksCorsPolicy = nameof(HealthChecksCorsPolicy);
+                public const string NotificationsApiPolicy = nameof(NotificationsApiPolicy);
+                public const string NotificationsStreamPolicy = nameof(NotificationsStreamPolicy);
+                public const string HealthChecksPolicy = nameof(HealthChecksPolicy);
             }
 
             public static class OpenApi
