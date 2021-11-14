@@ -31,7 +31,6 @@ export class NotificationsComponent implements OnInit {
 
     this.signalrService.receiveSimpleMessage.subscribe((simpleMessage: string) => {
       // this.simpleMessage = simpleMessage;
-      //this.notifications.push(simpleMessage);
     });
 
     this.signalrService.receiveAppPublishedMessage.subscribe((appPublishedMessage: AppPublished) => {

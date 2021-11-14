@@ -13,7 +13,7 @@ export class AppPublished extends MonitoringEventBase {
   version: string;
 
   public toString = (): string => {
-    return `Application ${this.appName} (${this.version}) published on ${this.when.toLocaleString()} by ${this.who}`;
+    return `Application "${this.appName}" (${this.version}) published on ${this.when.toLocaleString()}`; //by ${this.who}
   };
 
   constructor(init?: Partial<AppPublished>) {
