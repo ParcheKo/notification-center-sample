@@ -18,7 +18,7 @@
 
             public static class Users
             {
-                public const string Collection = "users";
+                public const string Collection = Base + "/" + "users";
                 public const string GetAll = "";
                 public const string GetOne = "{id:guid}";
                 public const string Create = "";
