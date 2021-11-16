@@ -15,10 +15,12 @@ namespace MonitoringService.Api
     public class NotificationController : ControllerBase
     {
         private readonly IHubContext<NotificationHub, INotificationHubClient> _notificationHubContext;
+        private readonly Settings _settings;
 
         public NotificationController(Settings settings,
             IHubContext<NotificationHub, INotificationHubClient> hubContext)
         {
+            _settings = settings;
             _notificationHubContext = hubContext;
         }
 

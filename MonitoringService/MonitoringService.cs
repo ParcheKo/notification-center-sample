@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -21,14 +18,14 @@ namespace MonitoringService
 {
     public class MonitoringService : IHostedService
     {
+        private const int DebouncingTimeInMilliseconds = 10000;
+        private readonly Dictionary<FileSystemWatcher, App> _fileSystemWatcherAppMappings;
+        private readonly IList<FileSystemWatcher> _fileWatchers;
         private readonly ILogger<MonitoringService> _logger;
         private readonly IMediator _mediator;
-        private readonly Settings _settings;
-        private readonly IList<FileSystemWatcher> _fileWatchers;
-        private readonly Dictionary<FileSystemWatcher, App> _fileSystemWatcherAppMappings;
-        private const int DebouncingTimeInMilliseconds = 10000;
-        private bool _isDebouncing;
         private readonly Timer _restorer = new(DebouncingTimeInMilliseconds);
+        private bool _isDebouncing;
+        private Settings _settings;
 
         public MonitoringService(ILogger<MonitoringService> logger,
             IServiceProvider provider,
@@ -40,8 +37,28 @@ namespace MonitoringService
             using var scope = provider.CreateScope();
             var scopedProvider = scope.ServiceProvider;
             _settings = scopedProvider.GetRequiredService<IOptionsSnapshot<Settings>>().Value;
+            scopedProvider.GetRequiredService<IOptionsMonitor<Settings>>().OnChange(settings =>
+            {
+                UpdateSettings(settings);
+                ConfigureFileWatchers(_fileWatchers).GetAwaiter().GetResult();
+            });
             _fileSystemWatcherAppMappings = new Dictionary<FileSystemWatcher, App>();
             _restorer.Elapsed += Restore;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            await ConfigureFileWatchers(_fileWatchers);
+        }
+
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await Task.CompletedTask;
+        }
+
+        private void UpdateSettings(Settings settings)
+        {
+            _settings = settings;
         }
 
         private void Restore(object sender,
@@ -53,6 +70,20 @@ namespace MonitoringService
 
         private async Task ConfigureFileWatchers(IList<FileSystemWatcher> fileWatchers)
         {
+            if (fileWatchers.Any())
+            {
+                foreach (var app in _settings.MonitoredApps)
+                {
+                    var fileWatcher = _fileSystemWatcherAppMappings.First(p => p.Value.Name == app.Name).Key;
+                    fileWatcher.IncludeSubdirectories = app.IncludeSubdirectories;
+                    fileWatcher.EnableRaisingEvents = app.IsMonitored;
+                    fileWatcher.NotifyFilter = app.ChangesToMonitor;
+                    fileWatcher.Filter = app.FileNameFilter;
+                }
+
+                return;
+            }
+
             foreach (var app in _settings.MonitoredApps)
             {
                 var fileWatcher = new FileSystemWatcher(app.RootPath)
@@ -140,16 +171,6 @@ namespace MonitoringService
                 _logger.LogInformation("StackTrace: {StackTrace}", ex.StackTrace);
                 PrintException(ex.InnerException);
             }
-        }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            await ConfigureFileWatchers(_fileWatchers);
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await Task.CompletedTask;
         }
     }
 }

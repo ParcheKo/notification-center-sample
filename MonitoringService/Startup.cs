@@ -103,7 +103,7 @@ namespace MonitoringService
                     });
             });
             services.Configure<Settings>(Configuration.GetSection(nameof(Settings)));
-            services.AddScoped(cfg => cfg.GetService<IOptionsSnapshot<Settings>>()?.Value!);
+            services.AddScoped(serviceProvider => serviceProvider.GetService<IOptionsSnapshot<Settings>>()?.Value!);
             services.AddSignalR(config =>
             {
                 if (Environment.IsDevelopment())
@@ -180,7 +180,7 @@ namespace MonitoringService
             // SEEMS NOT TO BE TRIGGERED in ASP.NET Core
             GlobalHost.HubPipeline.AddModule(new ErrorHandlingPipelineModule());
             GlobalHost.HubPipeline.AddModule(new LoggingPipelineModule());
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
