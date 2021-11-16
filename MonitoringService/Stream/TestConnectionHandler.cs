@@ -15,7 +15,7 @@ namespace MonitoringService.Stream
 
         public override async Task OnConnectedAsync(ConnectionContext connection)
         {
-            _logger.LogInformation(connection.ConnectionId + " connected");
+            _logger.LogInformation("{ConnectionId} connected", connection.ConnectionId);
 
             while (true)
             {
@@ -35,7 +35,7 @@ namespace MonitoringService.Stream
                 connection.Transport.Input.AdvanceTo(buffer.End);
             }
 
-            _logger.LogInformation(connection.ConnectionId + " disconnected");
+            _logger.LogInformation("{ConnectionId} disconnected", connection.ConnectionId);
         }
     }
 }
