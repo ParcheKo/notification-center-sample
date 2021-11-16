@@ -1,11 +1,11 @@
 using System;
 using HealthChecks.UI.Client;
 using MediatR;
-using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +15,6 @@ using MonitoringService.Configurations;
 using MonitoringService.Stream;
 using static MonitoringService.AssemblyVersionHelpers;
 using static MonitoringService.Configurations.Constants.Configuration;
-using IUserIdProvider = Microsoft.AspNetCore.SignalR.IUserIdProvider;
 
 
 namespace MonitoringService
@@ -178,8 +177,8 @@ namespace MonitoringService
 
             // Any connection or hub wire up and configuration should go here
             // SEEMS NOT TO BE TRIGGERED in ASP.NET Core
-            GlobalHost.HubPipeline.AddModule(new ErrorHandlingPipelineModule());
-            GlobalHost.HubPipeline.AddModule(new LoggingPipelineModule());
+            // GlobalHost.HubPipeline.AddModule(new ErrorHandlingPipelineModule());
+            // GlobalHost.HubPipeline.AddModule(new LoggingPipelineModule());
 
             app.UseEndpoints(endpoints =>
             {

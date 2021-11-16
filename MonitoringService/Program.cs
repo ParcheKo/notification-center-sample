@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MonitoringService.Stream;
 
 namespace MonitoringService
 {
@@ -26,7 +24,7 @@ namespace MonitoringService
                     webBuilder.UseKestrel(options =>
                     {
                         // TCP 8007
-                        options.ListenLocalhost(8007, builder => { builder.UseConnectionHandler<TestConnectionHandler>(); });
+                        // options.ListenLocalhost(8007, builder => { builder.UseConnectionHandler<TestConnectionHandler>(); });
 
                         // HTTP 5000
                         options.ListenLocalhost(5050);
