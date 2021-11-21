@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-WorkerService-C237F84D-E9B1-40AD-8658-C2C5793678DD</UserSecretsId>
     <Nullable>enable</Nullable>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
