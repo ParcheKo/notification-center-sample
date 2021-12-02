@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace MonitoringService.Events
+namespace MonitoringService.Identity
 {
     public class UserProvider : IUserProvider
     {

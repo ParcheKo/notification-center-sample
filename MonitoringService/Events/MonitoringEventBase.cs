@@ -1,5 +1,6 @@
 ﻿using System;
 using MediatR;
+using MonitoringService.Persistance;
 
 namespace MonitoringService.Events
 {

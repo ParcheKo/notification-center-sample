@@ -1,6 +1,6 @@
 using System;
 
-namespace MonitoringService.Events
+namespace MonitoringService.Persistance
 {
     public abstract class Entity
     {

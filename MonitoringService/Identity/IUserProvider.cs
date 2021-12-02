@@ -1,4 +1,4 @@
-namespace MonitoringService.Events
+namespace MonitoringService.Identity
 {
     public interface IUserProvider
     {

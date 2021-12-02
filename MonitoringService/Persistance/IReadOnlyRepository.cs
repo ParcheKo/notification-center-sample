@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MonitoringService.Events
+namespace MonitoringService.Persistance
 {
     public interface IReadOnlyRepository<T>
         where T : Entity

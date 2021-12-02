@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace MonitoringService.Events
+namespace MonitoringService.Persistance
 {
     public interface IRepository<T> : IReadOnlyRepository<T>
         where T : Entity
