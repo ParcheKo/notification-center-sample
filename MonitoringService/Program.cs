@@ -34,7 +34,7 @@ namespace MonitoringService
                                 // options.ListenLocalhost(8007, builder => { builder.UseConnectionHandler<TestConnectionHandler>(); });
 
                                 // HTTP 5000
-                                options.ListenLocalhost(5050);
+                                // options.ListenLocalhost(5050);
 
                                 // HTTPS 5001
                                 options.ListenLocalhost(
