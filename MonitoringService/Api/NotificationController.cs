@@ -17,7 +17,8 @@ namespace MonitoringService.Api
         private readonly IHubContext<NotificationHub, INotificationHubClient> _notificationHubContext;
         private readonly Settings _settings;
 
-        public NotificationController(Settings settings,
+        public NotificationController(
+            Settings settings,
             IHubContext<NotificationHub, INotificationHubClient> hubContext)
         {
             _settings = settings;

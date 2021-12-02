@@ -21,7 +21,8 @@ namespace MonitoringService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,
+        public Startup(
+            IConfiguration configuration,
             IHostEnvironment environment)
         {
             Configuration = configuration;
@@ -32,7 +33,8 @@ namespace MonitoringService
         private IHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(
+            IServiceCollection services)
         {
             var settings = Configuration.GetSection(nameof(Settings)).Get<Settings>();
 
@@ -49,37 +51,41 @@ namespace MonitoringService
             services.AddDistributedMemoryCache();
 
             // Add CORS allowed domains  
-            services.AddCors(options =>
-            {
-                options.AddPolicy(Cors.NotificationsApiPolicy,
-                    builder =>
-                    {
-                        builder
-                            .WithOrigins(settings.NotificationsAppUrl)
-                            .AllowCredentials()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-                options.AddPolicy(Cors.NotificationsStreamPolicy,
-                    builder =>
-                    {
-                        builder
-                            .WithOrigins(settings.NotificationsAppUrl)
-                            .AllowCredentials()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-                options.AddPolicy(Cors.HealthChecksPolicy,
-                    builder =>
-                    {
-                        builder
-                            // .WithOrigins(/*<allowed-origins>*/)
-                            // .AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
-                    });
-            });
+            services.AddCors(
+                options =>
+                {
+                    options.AddPolicy(
+                        Cors.NotificationsApiPolicy,
+                        builder =>
+                        {
+                            builder
+                                .WithOrigins(settings.NotificationsAppUrl)
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                    options.AddPolicy(
+                        Cors.NotificationsStreamPolicy,
+                        builder =>
+                        {
+                            builder
+                                .WithOrigins(settings.NotificationsAppUrl)
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                        });
+                    options.AddPolicy(
+                        Cors.HealthChecksPolicy,
+                        builder =>
+                        {
+                            builder
+                                // .WithOrigins(/*<allowed-origins>*/)
+                                // .AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials();
+                        });
+                });
 
             // All lowercase routes  
             services.AddRouting(options => options.LowercaseUrls = true);
@@ -92,46 +98,50 @@ namespace MonitoringService
             // services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>());
             // services.AddAuthorization();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1",
-                    new OpenApiInfo
-                    {
-                        Title = OpenApi.NotificationsApiTitle,
-                        Version = GetAppVersion()
-                    });
-            });
+            services.AddSwaggerGen(
+                c =>
+                {
+                    c.SwaggerDoc(
+                        "v1",
+                        new OpenApiInfo
+                        {
+                            Title = OpenApi.NotificationsApiTitle,
+                            Version = GetAppVersion()
+                        });
+                });
             services.Configure<Settings>(Configuration.GetSection(nameof(Settings)));
             services.AddScoped(serviceProvider => serviceProvider.GetService<IOptionsSnapshot<Settings>>()?.Value!);
-            services.AddSignalR(config =>
-            {
-                if (Environment.IsDevelopment())
+            services.AddSignalR(
+                config =>
                 {
-                    config.EnableDetailedErrors = true;
-                }
-            });
+                    if (Environment.IsDevelopment()) config.EnableDetailedErrors = true;
+                });
 
             //todo: add and setup later.
             services.AddSingleton<IUserIdProvider, SignalRUserProvider>();
             services.AddMediatR(typeof(Startup));
             var healthChecks = services.AddHealthChecks();
             foreach (var database in settings.HealthChecks.Databases)
-            {
                 healthChecks
-                    .AddSqlServer(database.ConnectionString,
+                    .AddSqlServer(
+                        database.ConnectionString,
                         name: database.Name);
-            }
 
-            healthChecks.AddRedis(settings.HealthChecks.RedisConnectionString,
+            healthChecks.AddRedis(
+                settings.HealthChecks.RedisConnectionString,
                 HealthCheck.Redis);
-            healthChecks.AddRabbitMQ(new Uri(settings.HealthChecks.RabbitMqConnectionString),
+            healthChecks.AddRabbitMQ(
+                new Uri(settings.HealthChecks.RabbitMqConnectionString),
                 name: "RabbitMQ");
-            healthChecks.AddUrlGroup(new Uri(settings.HealthChecks.SeqUri),
+            healthChecks.AddUrlGroup(
+                new Uri(settings.HealthChecks.SeqUri),
                 "Seq");
-            healthChecks.AddElasticsearch(s =>
+            healthChecks.AddElasticsearch(
+                s =>
                 {
                     s.UseServer(settings.HealthChecks.ElasticSearchUri);
-                    s.UseBasicAuthentication(settings.HealthChecks.ElasticSearchUsername,
+                    s.UseBasicAuthentication(
+                        settings.HealthChecks.ElasticSearchUsername,
                         settings.HealthChecks.ElasticSearchPassword);
                 },
                 "Elastic");
@@ -150,7 +160,8 @@ namespace MonitoringService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
+        public void Configure(
+            IApplicationBuilder app,
             IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -159,14 +170,16 @@ namespace MonitoringService
                 // app.UseMiniProfiler();
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    // c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("MonitoringService.index.html");
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                        OpenApi.NotificationsApiName);
-                    c.RoutePrefix = string.Empty;
-                    c.DisplayRequestDuration();
-                });
+                app.UseSwaggerUI(
+                    c =>
+                    {
+                        // c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("MonitoringService.index.html");
+                        c.SwaggerEndpoint(
+                            "/swagger/v1/swagger.json",
+                            OpenApi.NotificationsApiName);
+                        c.RoutePrefix = string.Empty;
+                        c.DisplayRequestDuration();
+                    });
             }
 
             app.UseHttpsRedirection();
@@ -180,25 +193,27 @@ namespace MonitoringService
             // GlobalHost.HubPipeline.AddModule(new ErrorHandlingPipelineModule());
             // GlobalHost.HubPipeline.AddModule(new LoggingPipelineModule());
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHub<NotificationHub>(AppRoutes.Stream.Notifications)
-                    .RequireCors(Cors.NotificationsStreamPolicy);
-                endpoints.MapHealthChecks(HealthCheck.ApiUrl,
-                        new HealthCheckOptions
-                        {
-                            Predicate = _ => true,
-                            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                        })
-                    .RequireCors(Cors.HealthChecksPolicy)
-                    // .RequireAuthorization();
-                    ;
-                // endpoints.MapHealthChecksUI(o =>
-                // {
-                //     o.UIPath = HealthCheck.UIPath;
-                // });
-            });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapControllers();
+                    endpoints.MapHub<NotificationHub>(AppRoutes.Stream.Notifications)
+                        .RequireCors(Cors.NotificationsStreamPolicy);
+                    endpoints.MapHealthChecks(
+                            HealthCheck.ApiUrl,
+                            new HealthCheckOptions
+                            {
+                                Predicate = _ => true,
+                                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                            })
+                        .RequireCors(Cors.HealthChecksPolicy)
+                        // .RequireAuthorization();
+                        ;
+                    // endpoints.MapHealthChecksUI(o =>
+                    // {
+                    //     o.UIPath = HealthCheck.UIPath;
+                    // });
+                });
         }
     }
 }

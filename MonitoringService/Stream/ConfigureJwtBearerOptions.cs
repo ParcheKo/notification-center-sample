@@ -6,7 +6,8 @@ namespace MonitoringService.Stream
 {
     public class ConfigureJwtBearerOptions : IPostConfigureOptions<JwtBearerOptions>
     {
-        public void PostConfigure(string name,
+        public void PostConfigure(
+            string name,
             JwtBearerOptions options)
         {
             var originalOnMessageReceived = options.Events.OnMessageReceived;
@@ -21,9 +22,7 @@ namespace MonitoringService.Stream
 
                     if (!string.IsNullOrEmpty(accessToken) &&
                         path.StartsWithSegments(AppRoutes.Stream.Notifications))
-                    {
                         context.Token = accessToken;
-                    }
                 }
             };
         }

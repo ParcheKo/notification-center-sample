@@ -5,7 +5,8 @@ namespace MonitoringService
 {
     public static class AssemblyVersionHelpers
     {
-        public static string GetAssemblyVersion(this string filePath)
+        public static string GetAssemblyVersion(
+            this string filePath)
         {
             return FileVersionInfo.GetVersionInfo(filePath).ProductVersion!;
         }

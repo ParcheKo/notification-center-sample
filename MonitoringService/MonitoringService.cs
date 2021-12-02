@@ -27,7 +27,8 @@ namespace MonitoringService
         private bool _isDebouncing;
         private Settings _settings;
 
-        public MonitoringService(ILogger<MonitoringService> logger,
+        public MonitoringService(
+            ILogger<MonitoringService> logger,
             IServiceProvider provider,
             IMediator mediator)
         {
@@ -37,38 +38,44 @@ namespace MonitoringService
             using var scope = provider.CreateScope();
             var scopedProvider = scope.ServiceProvider;
             _settings = scopedProvider.GetRequiredService<IOptionsSnapshot<Settings>>().Value;
-            scopedProvider.GetRequiredService<IOptionsMonitor<Settings>>().OnChange(settings =>
-            {
-                UpdateSettings(settings);
-                ConfigureFileWatchers(_fileWatchers).GetAwaiter().GetResult();
-            });
+            scopedProvider.GetRequiredService<IOptionsMonitor<Settings>>().OnChange(
+                settings =>
+                {
+                    UpdateSettings(settings);
+                    ConfigureFileWatchers(_fileWatchers).GetAwaiter().GetResult();
+                });
             _fileSystemWatcherAppMappings = new Dictionary<FileSystemWatcher, App>();
             _restorer.Elapsed += Restore;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(
+            CancellationToken cancellationToken)
         {
             await ConfigureFileWatchers(_fileWatchers);
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(
+            CancellationToken cancellationToken)
         {
             await Task.CompletedTask;
         }
 
-        private void UpdateSettings(Settings settings)
+        private void UpdateSettings(
+            Settings settings)
         {
             _settings = settings;
         }
 
-        private void Restore(object sender,
+        private void Restore(
+            object sender,
             ElapsedEventArgs e)
         {
             _isDebouncing = false;
             _restorer.Stop();
         }
 
-        private async Task ConfigureFileWatchers(IList<FileSystemWatcher> fileWatchers)
+        private async Task ConfigureFileWatchers(
+            IList<FileSystemWatcher> fileWatchers)
         {
             if (fileWatchers.Any())
             {
@@ -93,7 +100,9 @@ namespace MonitoringService
                     NotifyFilter = app.ChangesToMonitor,
                     Filter = app.FileNameFilter
                 };
-                _fileSystemWatcherAppMappings.Add(fileWatcher, app);
+                _fileSystemWatcherAppMappings.Add(
+                    fileWatcher,
+                    app);
                 fileWatcher.Changed += OnChanged;
                 fileWatcher.Created += OnCreated;
                 fileWatcher.Deleted += OnDeleted;
@@ -104,19 +113,29 @@ namespace MonitoringService
             }
         }
 
-        private void OnChanged(object sender,
+        private void OnChanged(
+            object sender,
             FileSystemEventArgs e)
         {
-            PublishAppPublishingMessage(sender, e);
-            _logger.LogInformation("Changed: {FullPath}", e.FullPath);
+            PublishAppPublishingMessage(
+                sender,
+                e);
+            _logger.LogInformation(
+                "Changed: {FullPath}",
+                e.FullPath);
             Debounce();
         }
 
-        private void OnCreated(object sender,
+        private void OnCreated(
+            object sender,
             FileSystemEventArgs e)
         {
-            PublishAppPublishingMessage(sender, e);
-            _logger.LogInformation("Created: {FullPath}", e.FullPath);
+            PublishAppPublishingMessage(
+                sender,
+                e);
+            _logger.LogInformation(
+                "Created: {FullPath}",
+                e.FullPath);
             Debounce();
         }
 
@@ -131,44 +150,61 @@ namespace MonitoringService
             _restorer.Start();
         }
 
-        private void PublishAppPublishingMessage(object sender,
+        private void PublishAppPublishingMessage(
+            object sender,
             FileSystemEventArgs e)
         {
-            if (_isDebouncing)
-            {
-                return;
-            }
+            if (_isDebouncing) return;
 
-            _fileSystemWatcherAppMappings.TryGetValue((sender as FileSystemWatcher)!, out var app);
+            _fileSystemWatcherAppMappings.TryGetValue(
+                (sender as FileSystemWatcher)!,
+                out var app);
             WaitForStorage();
             var version = e.FullPath.GetAssemblyVersion();
-            _mediator.Publish(new AppPublished("USERNAME", app!.Name, version));
+            _mediator.Publish(
+                new AppPublished(
+                    "USERNAME",
+                    app!.Name,
+                    version));
         }
 
-        private void OnDeleted(object sender,
+        private void OnDeleted(
+            object sender,
             FileSystemEventArgs e)
         {
-            _logger.LogInformation("Deleted: {FullPath}", e.FullPath);
+            _logger.LogInformation(
+                "Deleted: {FullPath}",
+                e.FullPath);
         }
 
-        private void OnRenamed(object sender,
+        private void OnRenamed(
+            object sender,
             RenamedEventArgs e)
         {
-            _logger.LogInformation("Renamed: From \"{OldFullPath}\" To \"{NewFullPath}\"", e.OldFullPath, e.FullPath);
+            _logger.LogInformation(
+                "Renamed: From \"{OldFullPath}\" To \"{NewFullPath}\"",
+                e.OldFullPath,
+                e.FullPath);
         }
 
-        private void OnError(object sender,
+        private void OnError(
+            object sender,
             ErrorEventArgs e)
         {
             PrintException(e.GetException());
         }
 
-        private void PrintException(Exception? ex)
+        private void PrintException(
+            Exception? ex)
         {
             if (ex != null)
             {
-                _logger.LogInformation("Error Message: {ExceptionMessage}", ex.Message);
-                _logger.LogInformation("StackTrace: {StackTrace}", ex.StackTrace);
+                _logger.LogInformation(
+                    "Error Message: {ExceptionMessage}",
+                    ex.Message);
+                _logger.LogInformation(
+                    "StackTrace: {StackTrace}",
+                    ex.StackTrace);
                 PrintException(ex.InnerException);
             }
         }
