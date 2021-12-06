@@ -13,8 +13,8 @@
 
             public static class OpenApi
             {
-                public const string NotificationsApiTitle = "Notifications API";
-                public const string NotificationsApiName = "Notifications API";
+                public const string NotificationsApiTitle = "Notifications API Title";
+                public const string NotificationsApiName = "Notifications API OpenApi Document Name In UI";
             }
 
             public static class HealthCheck

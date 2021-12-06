@@ -102,12 +102,36 @@ namespace MonitoringService
                 c =>
                 {
                     c.SwaggerDoc(
-                        "v1",
+                        "open-api-document-unique-key",
                         new OpenApiInfo
                         {
-                            Title = OpenApi.NotificationsApiTitle,
-                            Version = GetAppVersion()
+                            Description = "App Description",
+                            Version = GetAppVersion(),
+                            Contact = new OpenApiContact
+                            {
+                                Name = "Amir Parcheko",
+                                Email = "amir.a.rezaei.p@gmail.com",
+                                Url = new Uri("https://dev-team.ir")
+                            },
+                            Title = "Title of App",
+                            TermsOfService = new Uri("https://terms-of.service"),
+                            License = new OpenApiLicense
+                            {
+                                Name = "Proprietary License",
+                                Url = new Uri("https://license.url")
+                            }
                         });
+                    c.SwaggerDoc(
+                        "open-api-document-unique-key-2",
+                        new OpenApiInfo
+                        {
+                            Title = "Title of App 2",
+                            Version = "V2"
+                        });
+                    // c.SwaggerGeneratorOptions.SortKeySelector = options =>
+                    // {
+                    //     return options.GroupName;
+                    // };
                 });
             services.Configure<Settings>(Configuration.GetSection(nameof(Settings)));
             services.AddScoped(serviceProvider => serviceProvider.GetService<IOptionsSnapshot<Settings>>()?.Value!);
@@ -169,14 +193,60 @@ namespace MonitoringService
                 //todo: Add MiniProfiler, setup for swagger as well
                 // app.UseMiniProfiler();
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                app.UseSwagger(
+                    options =>
+                    {
+                        options.PreSerializeFilters.Add(
+                            (
+                                doc,
+                                ctx) =>
+                            {
+                                // doc.Info = new OpenApiInfo()
+                                // {
+                                //     Description = "App Description",
+                                //     Version = "1.2.3.4-a",
+                                //     Contact = new OpenApiContact()
+                                //     {
+                                //         Name = "Amir Parcheko",
+                                //         Email = "amir.a.rezaei.p@gmail.com",
+                                //         Url = new Uri("https://dev-team.ir")
+                                //     },
+                                //     Title = "Title of App",
+                                //     TermsOfService = new Uri("https://terms-of.service"),
+                                //     License = new OpenApiLicense()
+                                //     {
+                                //         Name = "Proprietary License",
+                                //         Url = new Uri("https://license.url")
+                                //     }
+                                // };
+                                doc.Servers.Add(
+                                    new OpenApiServer
+                                    {
+                                        Url = "https://server.url",
+                                        Description = "Server description"
+                                    });
+                                doc.Servers.Add(
+                                    new OpenApiServer
+                                    {
+                                        Url = "https://server2.url",
+                                        Description = "Server description"
+                                    });
+                            }
+                        );
+                    });
                 app.UseSwaggerUI(
                     c =>
                     {
                         // c.IndexStream = () => GetType().GetTypeInfo().Assembly.GetManifestResourceStream("MonitoringService.index.html");
                         c.SwaggerEndpoint(
-                            "/swagger/v1/swagger.json",
+                            "/swagger/open-api-document-unique-key/swagger.json",
+                            // "/sample-swagger-doc-v1.json",
                             OpenApi.NotificationsApiName);
+                        c.SwaggerEndpoint(
+                            "/swagger/open-api-document-unique-key-2/swagger.json",
+                            // "/sample-swagger-doc-v1.json",
+                            OpenApi.NotificationsApiName + " 2");
+                        c.DocumentTitle = "Document Title";
                         c.RoutePrefix = string.Empty;
                         c.DisplayRequestDuration();
                     });
