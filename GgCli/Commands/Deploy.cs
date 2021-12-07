@@ -58,32 +58,15 @@ namespace GgCli.Commands
             return version;
         }
 
-        // public class MyClass : IValidator
-        // {
-        //     public ValidationResult? GetValidationResult(
-        //         CommandOption option,
-        //         ValidationContext context)
-        //     {
-        //         
-        //     }
-        //
-        //     public ValidationResult? GetValidationResult(
-        //         CommandArgument argument,
-        //         ValidationContext context)
-        //     {
-        //         throw new NotImplementedException();
-        //     }
-        // }
-
         public static async Task<int> OnExecuteAsync(
             CancellationToken cancellationToken,
-            Apps app,
-            Environments environment,
-            SemVersion version)
+            Apps? app,
+            Environments? environment,
+            SemVersion? version)
         {
             Console.WriteLine(
-                $"Deploying \"{app.GetDescription()}\" " +
-                $"to \"{environment.GetDescription()}\" " +
+                $"Deploying \"{app!.Value.GetDescription()}\" " +
+                $"to \"{environment!.Value.GetDescription()}\" " +
                 $"from version \"{version}\""
             );
             return 0;

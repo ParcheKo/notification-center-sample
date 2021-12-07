@@ -30,7 +30,7 @@ namespace GgCli.ValueParsers
             var versions = version.Split(
                 ".",
                 StringSplitOptions.RemoveEmptyEntries);
-            if (versions.Length != 3) throw new BusinessException("Version is not in the form of semantic versions and not supported.");
+            if (versions.Length != 3) throw new BusinessException("Provided version must be in the semantic version format");
 
             List<int> values = new();
             foreach (var ver in versions)

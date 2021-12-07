@@ -54,8 +54,14 @@ namespace GgCli
             app.MakeSuggestionsInErrorMessage = true;
 
             var appArgument = Deploy.BuildAppArgument();
+            appArgument.Validators.Add(new DeployCommandValidator());
+
             var environmentOption = Deploy.BuildEnvironmentOption();
+            environmentOption.Validators.Add(new DeployCommandValidator());
+
             var versionOption = Deploy.BuildVersionOption();
+            versionOption.Validators.Add(new DeployCommandValidator());
+
             app.Command(
                 Deploy.Name,
                 cmd =>
@@ -70,13 +76,17 @@ namespace GgCli
                     cmd.OnExecuteAsync(
                         cancellationToken => Deploy.OnExecuteAsync(
                             cancellationToken,
-                            appArgument.ParsedValue!.Value,
-                            environmentOption.ParsedValue!.Value,
-                            versionOption.ParsedValue!
+                            appArgument.ParsedValue,
+                            environmentOption.ParsedValue,
+                            versionOption.ParsedValue
                         ));
                 });
             try
             {
+                // return await app.ExecuteAsync(new []
+                // {
+                //     "d", "mng", "-e", "dev2", "-v", "1.2.3"
+                // });
                 return await app.ExecuteAsync(args);
             }
             catch (Exception e)
