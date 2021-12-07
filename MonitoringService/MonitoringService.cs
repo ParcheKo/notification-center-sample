@@ -19,7 +19,7 @@ namespace MonitoringService
     public class MonitoringService : IHostedService
     {
         private const int DebouncingTimeInMilliseconds = 10000;
-        private readonly Dictionary<FileSystemWatcher, App> _fileSystemWatcherAppMappings;
+        private readonly Dictionary<FileSystemWatcher, MonitoredApp> _fileSystemWatcherAppMappings;
         private readonly IList<FileSystemWatcher> _fileWatchers;
         private readonly ILogger<MonitoringService> _logger;
         private readonly IMediator _mediator;
@@ -44,7 +44,7 @@ namespace MonitoringService
                     UpdateSettings(settings);
                     ConfigureFileWatchers(_fileWatchers).GetAwaiter().GetResult();
                 });
-            _fileSystemWatcherAppMappings = new Dictionary<FileSystemWatcher, App>();
+            _fileSystemWatcherAppMappings = new Dictionary<FileSystemWatcher, MonitoredApp>();
             _restorer.Elapsed += Restore;
         }
 

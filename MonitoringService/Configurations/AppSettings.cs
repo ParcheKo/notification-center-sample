@@ -11,7 +11,7 @@ namespace MonitoringService.Configurations
     public class Settings
     {
         public HealthChecks HealthChecks { get; set; }
-        public IEnumerable<App> MonitoredApps { get; set; }
+        public IEnumerable<MonitoredApp> MonitoredApps { get; set; }
         public string NotificationsAppUrl { get; set; }
     }
 
@@ -33,7 +33,7 @@ namespace MonitoringService.Configurations
         public string SeqUri { get; set; }
     }
 
-    public class App
+    public class MonitoredApp
     {
         public NotifyFilters ChangesToMonitor { get; set; }
         public string FileNameFilter { get; set; }
