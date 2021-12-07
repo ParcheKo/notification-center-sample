@@ -11,8 +11,8 @@ namespace GgCli.Commands
 {
     public static class Deploy
     {
-        public static string Name = "deploy";
-        public static string Alias = "d";
+        public const string Name = "deploy";
+        public const string Alias = "d";
 
         public static CommandArgument<Apps?> BuildAppArgument()
         {
