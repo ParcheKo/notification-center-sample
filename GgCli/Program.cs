@@ -83,6 +83,7 @@ namespace GgCli
                 });
             try
             {
+                // For debugging purposes 
                 // return await app.ExecuteAsync(new []
                 // {
                 //     "d", "mng", "-e", "dev2", "-v", "1.2.3"
