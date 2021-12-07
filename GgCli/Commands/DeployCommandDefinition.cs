@@ -9,7 +9,7 @@ using UnconstrainedMelody;
 
 namespace GgCli.Commands
 {
-    public static class Deploy
+    public static class DeployCommandDefinition
     {
         public const string Name = "deploy";
         public const string Alias = "d";

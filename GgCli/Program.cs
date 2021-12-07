@@ -53,28 +53,28 @@ namespace GgCli
                 valueParsers);
             app.MakeSuggestionsInErrorMessage = true;
 
-            var appArgument = Deploy.BuildAppArgument();
+            var appArgument = DeployCommandDefinition.BuildAppArgument();
             appArgument.Validators.Add(new DeployCommandValidator());
 
-            var environmentOption = Deploy.BuildEnvironmentOption();
+            var environmentOption = DeployCommandDefinition.BuildEnvironmentOption();
             environmentOption.Validators.Add(new DeployCommandValidator());
 
-            var versionOption = Deploy.BuildVersionOption();
+            var versionOption = DeployCommandDefinition.BuildVersionOption();
             versionOption.Validators.Add(new DeployCommandValidator());
 
             app.Command(
-                Deploy.Name,
+                DeployCommandDefinition.Name,
                 cmd =>
                 {
                     cmd.FullName = GetFullName(
                         Name,
-                        Deploy.Name);
-                    cmd.AddName(Deploy.Alias);
+                        DeployCommandDefinition.Name);
+                    cmd.AddName(DeployCommandDefinition.Alias);
                     cmd.AddArgument(appArgument);
                     cmd.AddOption(environmentOption);
                     cmd.AddOption(versionOption);
                     cmd.OnExecuteAsync(
-                        cancellationToken => Deploy.OnExecuteAsync(
+                        cancellationToken => DeployCommandDefinition.OnExecuteAsync(
                             cancellationToken,
                             appArgument.ParsedValue,
                             environmentOption.ParsedValue,
