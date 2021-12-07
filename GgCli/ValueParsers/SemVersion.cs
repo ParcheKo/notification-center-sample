@@ -27,26 +27,26 @@ namespace GgCli.ValueParsers
         public static SemVersion From(
             string version)
         {
-            var versions = version.Split(
+            var versionParts = version.Split(
                 ".",
                 StringSplitOptions.RemoveEmptyEntries);
-            if (versions.Length != 3) throw new BusinessException("Provided version must be in the semantic version format");
+            if (versionParts.Length != 3) throw new BusinessException("Provided version must be in the semantic version format");
 
-            List<int> values = new();
-            foreach (var ver in versions)
+            List<int> parsedVersionParts = new();
+            foreach (var versionPart in versionParts)
             {
                 if (!int.TryParse(
-                    ver,
-                    out var value))
+                    versionPart,
+                    out var parsedVersionPart))
                     throw new BusinessException("All three semantic version parts must be numbers.");
 
-                values.Add(value);
+                parsedVersionParts.Add(parsedVersionPart);
             }
 
             return new SemVersion(
-                values[0],
-                values[1],
-                values[2]);
+                parsedVersionParts[0],
+                parsedVersionParts[1],
+                parsedVersionParts[2]);
         }
     }
 }
