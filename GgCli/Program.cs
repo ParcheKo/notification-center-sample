@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using GgCli.Commands;
 using GgCli.ValueParsers;
 using McMaster.Extensions.CommandLineUtils;
@@ -9,44 +11,30 @@ using Microsoft.Extensions.Logging;
 
 namespace GgCli
 {
-    [HelpOption(Description = "Displays this guide information")]
     [VersionOptionFromMember(
         "-v|--version",
         MemberName = nameof(GetVersion))]
     [Command(
-        FullName = CliFullName,
-        Description = CliDescription,
-        Name = "gg",
+        FullName = FullName,
+        Description = Description,
+        Name = Name,
         UsePagerForHelpText = true)]
-    [Subcommand(
-        typeof(Deploy)
-    )]
     public class Program
     {
-        private const string CliFullName = "gg CLI";
+        private const string Name = "gg";
+        private const string FullName = "gg Command-Line Interface (CLI)";
 
-        private const string CliDescription = "A simple command-line tool for automating most-used development processes like : \n" +
-                                              "\t - Checking if services are up or healthy \n" +
-                                              "\t - App deployments \n" +
-                                              "\t - etc";
+        private const string Description = "A simple command-line tool for automating most-used development processes like : \n" +
+                                           "\t - Checking if services are up or healthy \n" +
+                                           "\t - App deployments \n" +
+                                           "\t - etc";
 
         private readonly ILogger<Program> _logger;
 
-        [Argument(
-            0,
-            Name = "files",
-            Description = "files to search in.")]
-        public string[] Files { get; } = { "file1.txt", "file2.txt", "file3.txt" };
-
-        [Option(
-            Template = "-b|--bank-lines",
-            Description = "number of blank lines",
-            ValueName = "count")]
-        public string[] BlankLines { get; set; }
-
-        public static int Main(
+        public static async Task<int> Main(
             string[] args)
         {
+            Console.ResetColor();
             var services = new ServiceCollection()
                 .AddSingleton(PhysicalConsole.Singleton)
                 .BuildServiceProvider();
@@ -55,25 +43,89 @@ namespace GgCli
             app.Conventions
                 .UseDefaultConventions()
                 .UseConstructorInjection(services);
+            var valueParsers = new List<IValueParser>
+            {
+                new EnvironmentsValueParser(),
+                new AppsValueParser(),
+                new SemVersionValueParser()
+            };
             app.ValueParsers.AddRange(
-                new List<IValueParser>
+                valueParsers);
+            app.MakeSuggestionsInErrorMessage = true;
+
+            var appArgument = Deploy.BuildAppArgument();
+            var environmentOption = Deploy.BuildEnvironmentOption();
+            var versionOption = Deploy.BuildVersionOption();
+            app.Command(
+                Deploy.Name,
+                cmd =>
                 {
-                    new EnvironmentsValueParser(),
-                    new AppsValueParser()
+                    cmd.FullName = GetFullName(
+                        Name,
+                        Deploy.Name);
+                    cmd.AddName(Deploy.Alias);
+                    cmd.AddArgument(appArgument);
+                    cmd.AddOption(environmentOption);
+                    cmd.AddOption(versionOption);
+                    cmd.OnExecuteAsync(
+                        cancellationToken => Deploy.OnExecuteAsync(
+                            cancellationToken,
+                            appArgument.ParsedValue!.Value,
+                            environmentOption.ParsedValue!.Value,
+                            versionOption.ParsedValue!
+                        ));
                 });
-            return app.Execute(args);
+            try
+            {
+                return await app.ExecuteAsync(args);
+            }
+            catch (Exception e)
+            {
+                ColorfulConsole.WriteLineInColor(
+                    e.Message,
+                    ConsoleColor.Red);
+                Console.ResetColor();
+                return 1;
+                // throw;
+            }
+        }
+
+        private static string GetFullName(
+            string parentCommandName,
+            string commandName)
+        {
+            return $"{parentCommandName} {commandName}";
         }
 
         private void OnExecute(
             CommandLineApplication app)
         {
+            ColorfulConsole.WriteLineInColor(
+                "No command provided!",
+                ConsoleColor.Yellow);
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Cyan;
             app.ShowHelp();
+            Console.ResetColor();
         }
 
 
         private static string GetVersion()
         {
             return typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
+        }
+
+        private static class ColorfulConsole
+        {
+            public static void WriteLineInColor(
+                string text,
+                ConsoleColor color)
+            {
+                var previousColor = Console.ForegroundColor;
+                Console.ForegroundColor = color;
+                Console.WriteLine(text);
+                Console.ForegroundColor = previousColor;
+            }
         }
     }
 }

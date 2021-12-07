@@ -22,7 +22,7 @@
 //         private int OnExecute(CommandLineApplication app,
 //             IConsole console)
 //         {
-//             console.WriteLine("You must specify at a subcommand.");
+//             Console.WriteLine("You must specify at a subcommand.");
 //             app.ShowHelp();
 //             return 1;
 //         }
@@ -39,7 +39,7 @@
 //         {
 //             private int OnExecute(IConsole console)
 //             {
-//                 console.Error.WriteLine("You must specify an action. See --help for more details.");
+//                 Console.Error.WriteLine("You must specify an action. See --help for more details.");
 //                 return 1;
 //             }
 //
@@ -52,7 +52,7 @@
 //
 //                 private void OnExecute(IConsole console)
 //                 {
-//                     console.WriteLine(string.Join("\n",
+//                     Console.WriteLine(string.Join("\n",
 //                         "CONTAINERS",
 //                         "----------------",
 //                         "jubilant_jackson",
@@ -80,7 +80,7 @@
 //
 //                 private void OnExecute(IConsole console)
 //                 {
-//                     console.WriteLine(
+//                     Console.WriteLine(
 //                         $"Would have run {Image} (name = {Name}) with args => {ArgumentEscaper.EscapeAndConcatenate(RemainingArguments)}");
 //                 }
 //             }
@@ -93,7 +93,7 @@
 //         {
 //             private int OnExecute(IConsole console)
 //             {
-//                 console.Error.WriteLine("You must specify an action. See --help for more details.");
+//                 Console.Error.WriteLine("You must specify an action. See --help for more details.");
 //                 return 1;
 //             }
 //
@@ -109,7 +109,7 @@
 //
 //                 private void OnExecute(IConsole console)
 //                 {
-//                     console.WriteLine(string.Join("\n",
+//                     Console.WriteLine(string.Join("\n",
 //                         "IMAGES",
 //                         "--------------------",
 //                         "microsoft/dotnet:2.0"));
